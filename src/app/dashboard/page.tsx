@@ -23,6 +23,7 @@ import {
   CheckCircle,
   AlertCircle
 } from 'lucide-react';
+import ParkingMap from '@/components/ParkingMap';
 
 export default function Dashboard() {
   const [activePage, setActivePage] = useState('map');
@@ -35,7 +36,7 @@ export default function Dashboard() {
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('success');
 
-  // Mock data for parking spots
+  // Mock data for parking spots with coordinates
   const [parkingSpots, setParkingSpots] = useState([
     { 
       id: 1, 
@@ -48,7 +49,9 @@ export default function Dashboard() {
       rating: 4.8, 
       reviews: 124,
       isFavorite: false,
-      lastUpdated: '2 min'
+      lastUpdated: '2 min',
+      lat: 44.4517,
+      lng: 26.0878
     },
     { 
       id: 2, 
@@ -61,7 +64,9 @@ export default function Dashboard() {
       rating: 4.5, 
       reviews: 89,
       isFavorite: true,
-      lastUpdated: '1 min'
+      lastUpdated: '1 min',
+      lat: 44.4317,
+      lng: 26.1017
     },
     { 
       id: 3, 
@@ -75,7 +80,9 @@ export default function Dashboard() {
       reviews: 67,
       isFavorite: false,
       lastUpdated: 'Acum',
-      isCurrent: true
+      isCurrent: true,
+      lat: 44.4477,
+      lng: 26.0978
     },
     { 
       id: 4, 
@@ -88,7 +95,9 @@ export default function Dashboard() {
       rating: 4.6, 
       reviews: 156,
       isFavorite: false,
-      lastUpdated: '5 min'
+      lastUpdated: '5 min',
+      lat: 44.4377,
+      lng: 26.0878
     },
   ]);
 
@@ -187,6 +196,14 @@ export default function Dashboard() {
         [setting]: !prev.notifications[setting as keyof typeof prev.notifications]
       }
     }));
+  };
+
+  const handleSpotClick = (spot: any) => {
+    showToastMessage(`Detalii pentru ${spot.name}`, 'success');
+  };
+
+  const handleSpotFavorite = (spotId: number) => {
+    toggleFavorite(spotId);
   };
 
   return (
@@ -388,23 +405,12 @@ export default function Dashboard() {
                   </div>
                 </div>
                 
-                <div className="h-96 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative">
-                  <div className="text-center text-gray-500">
-                    <MapPin className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                    <p className="text-lg font-medium">Hartă interactivă Google Maps</p>
-                    <p className="text-sm">Integrare în curs de dezvoltare</p>
-                  </div>
-                  
-                  {/* Sample parking pins */}
-                  <div className="absolute top-1/4 left-1/5 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold cursor-pointer hover:scale-125 transition-transform">
-                    5
-                  </div>
-                  <div className="absolute top-1/3 left-1/3 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold cursor-pointer hover:scale-125 transition-transform">
-                    0
-                  </div>
-                  <div className="absolute top-1/2 left-2/5 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold cursor-pointer hover:scale-125 transition-transform">
-                    12
-                  </div>
+                <div className="p-6">
+                  <ParkingMap 
+                    parkingSpots={parkingSpots}
+                    onSpotClick={handleSpotClick}
+                    onSpotFavorite={handleSpotFavorite}
+                  />
                 </div>
               </div>
             </div>
